@@ -10,13 +10,18 @@ import UIKit
 class ViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
+    @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+//        collectionViewFlowLayout.estimatedItemSize = CGSize(width: 120, height: 120)
+//        collectionViewFlowLayout.estimatedItemSize = CGSize(width: collectionView.frame.width / 2, height: collectionView.frame.height / 3)
+        
         let layout = UICollectionViewFlowLayout()
             layout.itemSize = CGSize(width: 170, height: 170)
-            layout.minimumInteritemSpacing = 10
-            layout.minimumLineSpacing = 50
+            layout.minimumInteritemSpacing = 5
+            layout.minimumLineSpacing = 5
             collectionView.collectionViewLayout = layout
     }
         
