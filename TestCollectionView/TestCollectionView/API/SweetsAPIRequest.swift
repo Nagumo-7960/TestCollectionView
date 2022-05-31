@@ -6,10 +6,4 @@
 //
 
 import Foundation
-import APIKit
 
-struct FetchSweetsAPI{    
-    var baseURL: URL {
-        return URL(string: "https://qiita.com/api/v2/")!
-    }
-}
