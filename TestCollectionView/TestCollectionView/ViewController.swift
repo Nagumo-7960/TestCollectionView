@@ -7,6 +7,28 @@
 
 import UIKit
 
+struct Qiita:Codable{
+    let title:String
+    let createdAt:String
+    let user: User
+    
+    enum CodingKeys:String, CodingKey{
+        case title = "title"
+        case createdAt = "created_at"
+        case user = "user"
+    }
+}
+
+struct User:Codable{
+    let name:String
+    let profileImageUrl:String
+    
+    enum CodingKeys:String, CodingKey{
+        case name = "name"
+        case profileImageUrl = "profile_image_url"
+    }
+}
+
 class ViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -40,8 +62,9 @@ class ViewController: UIViewController {
             }
             if let data = data{
                 do{
-                    let json = try! JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
-                    print("json: ", json)
+//                    let json = try! JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
+                    let qiita = try JSONDecoder().decode([Qiita].self, from: data)
+                    print("json: ", qiita)
                 }catch(let err){
                     print("情報の取得に失敗しました。:", err)
                 }
