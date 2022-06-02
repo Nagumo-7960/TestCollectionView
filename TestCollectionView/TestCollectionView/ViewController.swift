@@ -30,27 +30,26 @@ struct User:Codable{
 }
 
 class ViewController: UIViewController {
-    @IBOutlet weak var collectionView: UICollectionView!
     
-    @IBOutlet weak var collectionViewFlowLayout: UICollectionViewFlowLayout!
-    
+    let tableView:UITableView = {
+        let tv = UITableView()
+        return tv
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-//        collectionViewFlowLayout.estimatedItemSize = CGSize(width: 120, height: 120)
-//        collectionViewFlowLayout.estimatedItemSize = CGSize(width: collectionView.frame.width / 2, height: collectionView.frame.height / 3)
         
-        let layout = UICollectionViewFlowLayout()
-            layout.itemSize = CGSize(width: 170, height: 170)
-            layout.minimumInteritemSpacing = 5
-            layout.minimumLineSpacing = 5
-            collectionView.collectionViewLayout = layout
+        view.addSubview(tableView)
+        tableView.frame.size = view.frame.size
+        
         
         getQiitaAPI()
     }
     
+
+    
     private func getQiitaAPI(){
-        guard let url = URL(string: "https://qiita.com/api/v2/items?page=1&per_page=20")else {return}
+        guard let url = URL(string: "https://qiita.com/api/v2/items?page=1&per_page=5")else {return}
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -76,24 +75,42 @@ class ViewController: UIViewController {
         
 }
 
-
-
-extension ViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+class QiitaTableViewCell: UITableViewCell {
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+    var qiita: Qiita? {
+        didSet {
+            bodyTextLabel.text = qiita?.title
+            let url = URL(string: qiita?.user.profileImageUrl ?? "")
+            do {
+                let data = try Data(contentsOf: url!)
+                let image = UIImage(data: data)
+                userImageView.image = image
+            }catch let err {
+                print("Error : \(err.localizedDescription)")
+            }
+        }
     }
     
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
+    let userImageView: UIImageView = {
+       let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.translatesAutoresizingMaskIntoConstraints = false
+        iv.clipsToBounds = true
+        return iv
+    }()
     
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .blue
-        cell.layer.cornerRadius = 12
+    let bodyTextLabel: UILabel = {
+        let label = UILabel()
+        label.text = "something in here"
+        label.font = .systemFont(ofSize: 15)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
 
-        return cell
-    }
 }
+
+
+
+
 
