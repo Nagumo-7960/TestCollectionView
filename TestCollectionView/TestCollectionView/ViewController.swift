@@ -31,6 +31,8 @@ struct User:Codable{
 
 class ViewController: UIViewController {
     
+    private let cellId = "cellId"
+    
     let tableView:UITableView = {
         let tv = UITableView()
         return tv
@@ -42,11 +44,13 @@ class ViewController: UIViewController {
         view.addSubview(tableView)
         tableView.frame.size = view.frame.size
         
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
         
         getQiitaAPI()
     }
     
-
     
     private func getQiitaAPI(){
         guard let url = URL(string: "https://qiita.com/api/v2/items?page=1&per_page=5")else {return}
@@ -73,6 +77,19 @@ class ViewController: UIViewController {
         task.resume()
     }
         
+}
+
+extension ViewController:UITableViewDelegate,UITableViewDataSource{
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
+        cell.backgroundColor = .red
+        
+        return cell
+    }
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
 }
 
 class QiitaTableViewCell: UITableViewCell {
