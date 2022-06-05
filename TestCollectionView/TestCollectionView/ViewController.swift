@@ -32,6 +32,7 @@ struct User:Codable{
 class ViewController: UIViewController {
     
     private let cellId = "cellId"
+    private var qiitas = [Qiita]()
     
     let tableView:UITableView = {
         let tv = UITableView()
@@ -46,7 +47,8 @@ class ViewController: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellId)
+        tableView.register(QiitaTableViewCell.self, forCellReuseIdentifier: cellId)
+        navigationItem.title = "Qiitaの記事"
         
         getQiitaAPI()
     }
@@ -67,6 +69,10 @@ class ViewController: UIViewController {
                 do{
 //                    let json = try! JSONSerialization.jsonObject(with: data, options: .fragmentsAllowed)
                     let qiita = try JSONDecoder().decode([Qiita].self, from: data)
+                    self.qiitas = qiita
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
                     print("json: ", qiita)
                 }catch(let err){
                     print("情報の取得に失敗しました。:", err)
@@ -79,15 +85,20 @@ class ViewController: UIViewController {
         
 }
 
+
+
 extension ViewController:UITableViewDelegate,UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)
-        cell.backgroundColor = .red
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath)as! QiitaTableViewCell
+        cell.qiita = qiitas[indexPath.row]
         
         return cell
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return qiitas.count
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
     
 }
@@ -126,6 +137,7 @@ class QiitaTableViewCell: UITableViewCell {
     
 
 }
+
 
 
 
