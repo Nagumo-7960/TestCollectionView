@@ -31,6 +31,8 @@ struct User:Codable{
 
 class ViewController: UIViewController {
     
+   
+    @IBOutlet weak var navItem: UINavigationItem!
     private let cellId = "cellId"
     private var qiitas = [Qiita]()
     
@@ -42,15 +44,16 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(tableView)
-        tableView.frame.size = view.frame.size
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(QiitaTableViewCell.self, forCellReuseIdentifier: cellId)
+//        view.addSubview(tableView)
+//        tableView.frame.size = view.frame.size
+//
+//        tableView.delegate = self
+//        tableView.dataSource = self
+//        tableView.register(QiitaTableViewCell.self, forCellReuseIdentifier: cellId)
         navigationItem.title = "Qiitaの記事"
+        navItem.title = "ああああ"
         
-        getQiitaAPI()
+//        getQiitaAPI()
     }
     
     
